@@ -12,21 +12,18 @@ import schedule
 import time
 from plyer import notification
 import random
-
 import requests
 from bs4 import BeautifulSoup
-
 
 def larima_gui():
     return 0
 
 
-def larima_tall(message: str):
-    notification.notify(
-        title="Rimaからのお話だよ!",
-        message=message,
-        app_name="Larima"
-    )
+def larima_tell(message: str):
+    if platform.system()== "Darwin":
+        os.system("osascript -e 'display notification\" {}\"'".format(message))
+    else:
+        notification.notify(title='Rima', message='message')
 
 
 def job():
@@ -62,6 +59,6 @@ def call_wait():
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    larima_tall("test")
+    larima_tell("test")
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
