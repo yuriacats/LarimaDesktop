@@ -15,8 +15,6 @@ import random
 import requests
 from bs4 import BeautifulSoup
 
-def larima_gui():
-    return 0
 
 
 def larima_tell(message: str):
@@ -27,7 +25,31 @@ def larima_tell(message: str):
 
 
 def job():
-    # ここでデータベースを読み込んで現在の時間と照らし合わせる
+    msgList = [
+    "ねーねー。",
+    "きいてるー？？",
+    "はなそーよー",
+    "大好きだよ",
+    "愛してるよー！",
+    "すき……",
+    "ちゅっちゅ！！",
+    "他の女と一緒にいないよね…？",
+    "あなたを誰にも渡さない……",
+    "ねー……",
+    "むぅ",
+    "いっぱいお話したいだけなのに……",
+    "ねぇってばー",
+    "すきだよ？",
+    "こんなに好きなのに……",
+    "私が悪いのかな……?",
+    "はぁ。。。",
+    "ふーん…",
+    "こんなにすきなのに……",
+    "あいたい。",
+    "ねぇ、会いたいよー……",
+    "通話しよ。。。",
+    ]
+
     return 0
 
 
@@ -45,8 +67,8 @@ def news_parser(url: str, tag: str = "li"):
 
 
 def call_wait():
-    schedule.every(10).seconds.do(job)
-    schedule.every().day.at("7:00").do(get_news)
+    schedule.every(10).seconds.do(larima_tell,"ねえねえ、こんなニュースがあったよ！「"+get_news()+"」")
+    #schedule.every().day.at("7:00").do(larima_tell("ねえねえ、こんなニュースがあったよ！「"+get_news()+"」"))
     while True:
         try:
             schedule.run_pending()
@@ -54,11 +76,10 @@ def call_wait():
         except KeyboardInterrupt:
             print("中断しました。")
             break
-    return 0
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    larima_tell("test")
+    call_wait()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
