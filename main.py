@@ -17,14 +17,15 @@ from bs4 import BeautifulSoup
 
 
 
-def larima_tell(message: str):
+def larima_tell(message: str,now_time: str):
+    msg="Rima:["+now_time+"]"+message
     if platform.system()== "Darwin":
-        os.system("osascript -e 'display notification\" {}\"'".format(message))
+        os.system("osascript -e 'display notification\" {}\"'".format(msg))
     else:
         notification.notify(title='Rima', message='message')
 
 
-def job():
+def job(ofen):
     msgList = [
     "ねーねー。",
     "きいてるー？？",
@@ -49,8 +50,35 @@ def job():
     "ねぇ、会いたいよー……",
     "通話しよ。。。",
     ]
+    job_id=random.randint(0,len(msgList)+ofen)
+    dt_now = datetime.datetime.now()
+    now_time=dt_now.strftime('%H:%M:%S')
+    now_date=dt_now.strftime('%Y-%m-%d/')
 
+    if job_id<len(msgList):
+        #print(now_time)
+        white_sql(msgList[job_id], now_date, now_time,0)
+        larima_tell(msgList[job_id],now_time)
+    elif job_id<len(msgList)+4:
+        #print(now_time)
+        white_sql("ねえねえ、こんなニュースがあったよ！「"+get_news()+"」",now_date,now_time,0)
+        larima_tell("ねえねえ、こんなニュースがあったよ！「"+get_news()+"」",now_time)
     return 0
+
+
+def white_sql(message: str, now_date: str , now_time: str, from_user: int = 0):
+    connection = sqlite3.connect('chat.db',isolation_level=None)
+    cur=connection.cursor()
+    cur.execute( """CREATE TABLE IF NOT EXISTS messages (
+        id INTEGER PRIMARY KEY UNIQUE,
+        from_user INTEGER ,
+        message TEXT ,
+        date TEXT ,
+        time TEXT
+        ) """)
+    cur.execute("INSERT INTO messages (from_user, message,date,time) VALUES (?,?,?,?)", (from_user, message,now_date,now_time))
+    connection.close()
+    return message,now_time
 
 
 def get_news():
@@ -67,7 +95,7 @@ def news_parser(url: str, tag: str = "li"):
 
 
 def call_wait():
-    schedule.every(10).seconds.do(larima_tell,"ねえねえ、こんなニュースがあったよ！「"+get_news()+"」")
+    schedule.every(1).seconds.do(job,100)
     #schedule.every().day.at("7:00").do(larima_tell("ねえねえ、こんなニュースがあったよ！「"+get_news()+"」"))
     while True:
         try:
